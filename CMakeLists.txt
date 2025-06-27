@@ -15,10 +15,9 @@ add_executable(aimeio_pn532_test
 add_library(
         aimeio_pn532
         SHARED
-        src/util/dprintf.c
+        src/util/dprintf.cpp
         src/util/dprintf.h
-        src/util/Logger.cpp
-        src/util/Logger.h
+        src/util/logging.h
         src/Felica.h
         src/Felica.cpp
         src/aimeio.cpp

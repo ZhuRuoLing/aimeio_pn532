@@ -7,10 +7,9 @@
 #include "string"
 #include "sstream"
 #include "iostream"
-#include "util/Logger.h"
+#include "util/logging.h"
 
 static FelicaReader *felicaReader = nullptr;
-static Logger logger = Logger("aimeio.log");
 static uint8_t idM[8];
 static bool hasAime = false;
 
@@ -36,9 +35,9 @@ HRESULT aime_io_init() {
     );
 
     if (result > 0) {
-        logger.log("device_port = {}", devicePort);
+        log("device_port = {}\n", devicePort);
     } else {
-        logger.log("Failed to read device_port from INI file.\n");
+        log("Failed to read device_port from INI file.\n");
     }
 
     std::string conn_string;
@@ -47,16 +46,17 @@ HRESULT aime_io_init() {
 
     felicaReader = new FelicaReader(conn_string.c_str(), false);
     if (!felicaReader->createDevice()) {
+        log("createDevice Failed.");
         return S_FALSE;
     }
-    logger.log("createDevice Success.");
+    log("createDevice Success.");
     return S_OK;
 }
 
 HRESULT aime_io_nfc_poll(uint8_t unit_no) {
     if (unit_no != 0)return S_OK;
     if (felicaReader) {
-        logger.log("Polling!");
+        log("Polling!");
         hasAime = felicaReader->readCardForId(idM) == 1;
     }
     return S_OK;
@@ -67,19 +67,20 @@ HRESULT aime_io_nfc_get_aime_id(
     uint8_t *luid,
     size_t luid_size
 ) {
-    logger.log("legacy unit_no {}", unit_no);
+    log("legacy unit_no {}", unit_no);
     if (unit_no != 0)return S_FALSE;
 
     if (hasAime) {
+        memset(luid, 0, luid_size);
         std::stringstream ss;
         for (const auto &item: idM) {
-            ss << (int)item;
+            ss << (int) item;
         }
         while (ss.str().length() < 20) {
             ss << '0';
         }
         std::string luidString = ss.str();
-        logger.log("Legacy luid: {}", luidString);
+        log("Legacy luid: {}", luidString);
         uint8_t id[10];
         memset(id, 0, 10);
         for (int i = 0, j = 0; i < 20; i += 2) {
@@ -92,19 +93,20 @@ HRESULT aime_io_nfc_get_aime_id(
 }
 
 HRESULT aime_io_nfc_get_felica_id(uint8_t unit_no, uint64_t *IDm) {
-    logger.log("felica id {}", unit_no);
+    *IDm = 0;
+    log("felica id {}", unit_no);
     if (unit_no != 0)return S_FALSE;
     if (!hasAime) {
-        logger.log("we have no aime.");
+        log("we have no aime.");
         return S_FALSE;
     }
-    logger.log("before aime!!! {:#x}", *IDm);
+    log("before aime!!! {:#x}", *IDm);
     uint64_t value = 0;
     for (int i = 0; i < 8; ++i) {
-        value = (value<<8) | idM[i];
+        value = (value << 8) | idM[i];
     }
     *IDm = value;
-    logger.log("after aime!!! {:#x}", *IDm);
+    log("after aime!!! {:#x}", *IDm);
 
     return S_OK;
 }

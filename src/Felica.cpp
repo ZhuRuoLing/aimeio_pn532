@@ -4,7 +4,7 @@
 
 #include <cstring>
 #include "Felica.h"
-#include "util/Logger.h"
+#include "util/logging.h"
 
 FelicaReader::FelicaReader(const char *connString, bool silence) noexcept {
     this->connString = connString;
@@ -24,15 +24,15 @@ int FelicaReader::createDevice() noexcept {
     nfc_init(&this->context);
     this->reader = nfc_open(this->context, this->connString);
     if (!this->reader) {
-        this->logger.log("Open reader ({}) failed\n", connString);
-        return OPEN_DEVICE_FAILED;
+        log("Open reader ({}) failed\n", connString);
+        return false;
     }
     int initResult = nfc_initiator_init(this->reader);
     if (initResult) {
-        logger.log("Init reader as initiator failed.\n");
-        return INIT_DEVICE_FAILED;
+        log("Init reader as initiator failed.\n");
+        return false;
     }
-    logger.log("Initiated reader.\n");
+    log("Initiated reader.\n");
     return true;
 }
 
@@ -53,7 +53,7 @@ int FelicaReader::readCardForId(uint8_t *id) noexcept {
     int result = nfc_initiator_list_passive_targets(this->reader, modulation, &target, 1);
     if (result == 1) {
         memcpy(id, target.nti.nfi.abtId, 8);
-        logger.log("felica id: {}", felicaIdToString(id));
+        log("felica id: {}", felicaIdToString(id));
     }
     return result;
 }

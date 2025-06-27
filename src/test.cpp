@@ -6,7 +6,6 @@
 #include <sstream>
 #include <iomanip>
 #include <thread>
-#include <chrono>
 
 std::string felicaIdToString0(const uint8_t *array) {
     std::stringstream ss;

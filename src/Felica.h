@@ -13,7 +13,7 @@
 #include <filesystem>
 
 #include "util/dprintf.h"
-#include "util/Logger.h"
+#include "util/logging.h"
 
 #define OPEN_DEVICE_FAILED (-1)
 #define INIT_DEVICE_FAILED (-1)
@@ -23,7 +23,6 @@ private:
     nfc_context *context = nullptr;
     nfc_device *reader = nullptr;
     const char *connString = nullptr;
-    Logger logger = Logger("logs_Felica.txt");
     bool silence = false;
 public:
     FelicaReader(const char *connString, bool silence) noexcept;

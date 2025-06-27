@@ -14,17 +14,15 @@ static CRITICAL_SECTION dbg_buf_lock;
 static char dbg_buf[16384];
 static size_t dbg_buf_pos;
 
-void dprintf(const char *fmt, ...)
-{
+void dprintf(const char *fmt, ...) {
     va_list ap;
 
-    va_start(ap, fmt);
+        va_start(ap, fmt);
     dprintfv(fmt, ap);
-    va_end(ap);
+        va_end(ap);
 }
 
-void dprintfv(const char *fmt, va_list ap)
-{
+void dprintfv(const char *fmt, va_list ap) {
     long init;
 
     /* Static constructors in C are difficult to do in a way that works under
@@ -65,17 +63,15 @@ void dprintfv(const char *fmt, va_list ap)
     LeaveCriticalSection(&dbg_buf_lock);
 }
 
-void dwprintf(const wchar_t *fmt, ...)
-{
+void dwprintf(const wchar_t *fmt, ...) {
     va_list ap;
 
-    va_start(ap, fmt);
+        va_start(ap, fmt);
     dwprintfv(fmt, ap);
-    va_end(ap);
+        va_end(ap);
 }
 
-void dwprintfv(const wchar_t *fmt, va_list ap)
-{
+void dwprintfv(const wchar_t *fmt, va_list ap) {
     wchar_t msg[512];
 
     _vsnwprintf_s(msg, _countof(msg), _countof(msg) - 1, fmt, ap);
