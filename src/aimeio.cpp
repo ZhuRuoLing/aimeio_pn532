@@ -7,6 +7,7 @@
 #include "string"
 #include "sstream"
 #include "iostream"
+#include "util/Logger.h"
 
 static FelicaReader *felicaReader = nullptr;
 static Logger logger = Logger("aimeio.log");

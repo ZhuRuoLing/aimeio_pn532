@@ -7,19 +7,23 @@ find_library(LIBNFC NAMES nfc PATHS ${CMAKE_SOURCE_DIR}/libs)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(aimeio_pn532_test
-        test.cpp
-        Felica.cpp
-        Felica.h
+        src/test.cpp
+        src/Felica.cpp
+        src/Felica.h
 )
 
 add_library(
         aimeio_pn532
         SHARED
-        Felica.h
-        Felica.cpp
-        aimeio.cpp
-        aimeio.h
-        aimeio.def
+        src/util/dprintf.c
+        src/util/dprintf.h
+        src/util/Logger.cpp
+        src/util/Logger.h
+        src/Felica.h
+        src/Felica.cpp
+        src/aimeio.cpp
+        src/aimeio.h
+        src/aimeio.def
 )
 
 if (LIBNFC)

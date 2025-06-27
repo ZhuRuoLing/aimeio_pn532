@@ -8,7 +8,7 @@
 #include <thread>
 #include <chrono>
 
-std::string felicaIdToString(const uint8_t *array) {
+std::string felicaIdToString0(const uint8_t *array) {
     std::stringstream ss;
     for (int i = 0; i < 8; ++i) {
         ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(array[i]);
@@ -23,7 +23,7 @@ int main() {
     if (!reader.createDevice())return 1;
     while (true) {
         if (reader.readCardForId(id) == 1){
-            printf("New Aime: %s\n", felicaIdToString(id).c_str());
+            printf("New Aime: %s\n", felicaIdToString0(id).c_str());
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }

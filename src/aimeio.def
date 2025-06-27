@@ -1,4 +1,4 @@
-LIBRARY aimeio
+LIBRARY aimeio_pn532
 
 EXPORTS
     aime_io_get_api_version
